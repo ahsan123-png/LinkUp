@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+</head>
+<body>
+    <div class="chat-app">
+        <!-- Sidebar (Chats list) -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Chats</h2>
+                <button id="new-chat">+</button>
+            </div>
+            <div class="chat-list">
+                <!-- Sample chat items -->
+                <div class="chat-item active">
+                    <img src="{% static "media/profile.png" %}" alt="User">
+                    <div class="chat-info">
+                        <h4>+92 321 9067312</h4>
+                        <p>Get well soon</p>
+                    </div>
+                </div>
+                <!-- Add more chat items here -->
+            </div>
+        </div>
+
+        <!-- Main chat window -->
+        <div class="chat-window">
+            <!-- Chat header -->
+            <div class="chat-header">
+                <h4>+92 321 9067312</h4>
+                <div class="chat-actions">
+                    <button><i class="fas fa-phone-alt"></i></button>
+                    <button><i class="fas fa-video"></i></button>
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+
+            <!-- Chat messages -->
+            <div class="chat-content">
+                <!-- Sample messages -->
+                <div class="message received">
+                    <p>Sure, no problem. Get well soon.</p>
+                    <span class="message-time">12:26 PM</span>
+                </div>
+                <div class="message sent">
+                    <p>See you at 3 PM</p>
+                    <span class="message-time">7:22 PM</span>
+                </div>
+                <!-- More messages -->
+            </div>
+
+            <!-- Input and attachments -->
+            <div class="chat-input-section">
+                <button id="attachment-btn">📎</button>
+                <input type="text" placeholder="Type a message">
+                <button id="send-btn">Send</button>
+            </div>
+
+            <!-- Attachment Popup -->
+            <div id="attachment-popup" class="popup hidden">
+                <div class="popup-option" id="photos-videos">Photos & Videos</div>
+                <div class="popup-option" id="camera">Camera</div>
+                <div class="popup-option" id="document">Document</div>
+            </div>
+
+            <!-- Overlay for closing popup -->
+            <div id="overlay" class="overlay hidden"></div>
+        </div>
+    </div>
+
+    <script src="{% static "js/app.js" %}"></script>
+</body>
+</html>
