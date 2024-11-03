@@ -11,6 +11,8 @@ from django.contrib.auth.models import User
 # user serializer 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    email = serializers.EmailField(required=False)
+    phone_number = serializers.CharField(required=True)
     class Meta:
         model = UserEx
         fields = ['username', 'phone_number', 'email', 'password']
