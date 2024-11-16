@@ -11,10 +11,11 @@
     <div class="auth-container">
         <div class="auth-form">
             <h2>Login</h2>
-            <form id="login-form">
+            <form id="login-form" method="post">
+                {% csrf_token %}
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
+                    <label for="identifier">Email or Phone Number</label>
+                    <input type="text" id="identifier" name="identifier" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
@@ -22,11 +23,10 @@
                 </div>
                 <button type="submit">Login</button>
             </form>
-            <p class="auth-text">Don't have an account? <a href="signup.html">Sign up</a></p>
+            <p class="auth-text">Don't have an account? <a href="{% url "register" %}">Sign up</a></p>
         </div>
     </div>
-
-    <!-- Move the script here -->
+    <div id="home-url" data-home-url="{% url 'home' %}"></div>
     <script src="{% static "js/auth.js" %}"></script>
 </body>
 </html>

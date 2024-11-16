@@ -6,6 +6,7 @@ from django.utils import timezone
 
 class UserEx(User):
     phone_number = models.CharField(max_length=15, unique=True)
+    full_name = models.CharField(max_length=15, blank=True,null=True)
     is_verified = models.BooleanField(default=False)
 
 class Group(models.Model):

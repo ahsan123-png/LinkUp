@@ -5,22 +5,22 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.exceptions import ValidationError
 from .serializers import *
 import logging
+from rest_framework.views import APIView
+
+from rest_framework.decorators import api_view
 logger = logging.getLogger(__name__)
 
-class UserRegisterAPIView(generics.CreateAPIView):
-    serializer_class = UserRegistrationSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except ValidationError as e:
-            return Response({"errors": e.detail}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            logger.error(f"Unexpected error during registration: {str(e)}")
-            return Response({"error": "An unexpected error occurred. Please try again."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+class UserRegistrationAPIView(APIView):
+    def post(self, request):
+        # Create the serializer and pass the incoming request data
+        serializer = UserRegistrationSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            # If serializer is valid, create the user
+            user = serializer.save()
+            return Response({"message": "User registered successfully", "user": serializer.data}, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 # ========== user Login ==============
 class LoginAPIView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
