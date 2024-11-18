@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'userEx',
     'frontend',
+    'corsheaders',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -24,6 +25,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 ROOT_URLCONF = 'LinkUp.urls'
@@ -83,6 +85,7 @@ REST_FRAMEWORK = {
 #     'SIGNING_KEY': SECRET_KEY,
 #     'AUTH_HEADER_TYPES': ('Bearer',),
 # }
+CORS_ALLOW_ALL_ORIGINS = True
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
@@ -93,3 +96,21 @@ MEDIA_URL = '/media/'
 # Channels layers
 MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CORS_ALLOW_CREDENTIALS = True
+# Disable CSRF checks for API views
+CSRF_COOKIE_HTTPONLY = True
+CSRF_TRUSTED_ORIGINS = [
+    # 'http://localhost:3000',  # Add your frontend domain(s) here
+    # 'https://your-frontend-domain.com',  # Production frontend
+]
+
+# Disable CSRF for views under REST API
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # Change to a more restrictive permission if needed
+    ],
+}

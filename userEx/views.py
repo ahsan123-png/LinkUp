@@ -6,7 +6,6 @@ from rest_framework.exceptions import ValidationError
 from .serializers import *
 import logging
 from rest_framework.views import APIView
-
 from rest_framework.decorators import api_view
 logger = logging.getLogger(__name__)
 
