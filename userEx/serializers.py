@@ -13,12 +13,14 @@ logger = logging.getLogger(__name__)
 class UserRegistrationSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True)
-    email = serializers.EmailField(required=False)
-    phone_number = serializers.CharField(required=True)
+    email = serializers.EmailField(required=False, allow_blank=True)
+    phone_number = serializers.CharField(required=True)  # No additional validation
     username = serializers.CharField(required=False)
+
     class Meta:
         model = UserEx
-        fields = ['username', 'email', 'phone_number', 'password', 'full_name'] 
+        fields = ['username', 'email', 'phone_number', 'password', 'full_name']
+
     def validate_full_name(self, value):
         logger.debug(f"Validating full_name: {value}")
         name_parts = value.split(" ")
@@ -28,40 +30,26 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         else:
             self.context['first_name'] = name_parts[0]
             self.context['last_name'] = " ".join(name_parts[1:])
-        return value  
-    def generate_unique_username(self, first_name):
-        while True:
-            random_number = random.randint(1000, 9999) 
-            username = f"{first_name.lower()}{random_number}"  
-            if not User.objects.filter(username=username).exists(): 
-                return username
-    def validate_email(self, value):
-        if UserEx.objects.filter(email=value).exists():
-            raise serializers.ValidationError("Email already exists.")
         return value
-    def validate_phone_number(self, value):
-        if UserEx.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError("Phone number already exists.")
-        if not re.match(r'^\+\d{1,3}\d{9,15}$', value):
-            raise serializers.ValidationError("Invalid phone number format.")
-        return value
-    def validate_password(self, value):
-        if len(value) < 8:
-            raise serializers.ValidationError("Password must be at least 8 characters long.")
-        if not re.search(r'[A-Za-z]', value) or not re.search(r'\d', value):
-            raise serializers.ValidationError("Password must contain both letters and numbers.")
-        return value
+
     def create(self, validated_data):
-        first_name = self.context.get('first_name') 
-        last_name = self.context.get('last_name') 
-        validated_data['first_name'] = first_name
-        validated_data['last_name'] = last_name
-        validated_data.pop('full_name', None)
-        username = self.generate_unique_username(first_name)
-        validated_data['username'] = username
-        validated_data['password'] = make_password(validated_data['password'])
-        user = UserEx.objects.create(**validated_data)
+        """
+        Create a UserEx instance.
+        """
+        logger.debug(f"Creating user with data: {validated_data}")
+        first_name = self.context.get('first_name', '')
+        last_name = self.context.get('last_name', '')
+        user = UserEx.objects.create(
+            username=validated_data.get('username', validated_data['phone_number']),  # Default to phone_number
+            email=validated_data.get('email', ''),
+            phone_number=validated_data['phone_number'],
+            first_name=first_name,
+            last_name=last_name
+        )
+        user.set_password(validated_data['password'])
+        user.save()
         return user
+
 # ================ Login ================ 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
