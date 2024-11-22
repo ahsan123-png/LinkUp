@@ -57,32 +57,32 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-# ================ Login ================ 
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        token['username'] = user.username
-        token['email'] = user.email
-        return token
-    def validate(self, attrs):
-        identifier = attrs.get('username') 
-        password = attrs.get('password')
-        try:
-            user = UserEx.objects.filter(email=identifier).first()
-            if not user:
-                user = UserEx.objects.filter(phone_number=identifier).first()
-            if not user:
-                raise ValidationError("User not found with this email/phone number")
-            if not user.check_password(password):
-                raise ValidationError("Incorrect password")
-            data = super().validate(attrs)
-            data.update({
-                'user': {
-                    'username': user.username,
-                    'email': user.email,
-                }
-            })
-            return data
-        except UserEx.DoesNotExist:
-            raise ValidationError("User with given credentials not found")
+# # ================ Login ================ 
+# class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+#     @classmethod
+#     def get_token(cls, user):
+#         token = super().get_token(user)
+#         token['username'] = user.username
+#         token['email'] = user.email
+#         return token
+#     def validate(self, attrs):
+#         identifier = attrs.get('username') 
+#         password = attrs.get('password')
+#         try:
+#             user = UserEx.objects.filter(email=identifier).first()
+#             if not user:
+#                 user = UserEx.objects.filter(phone_number=identifier).first()
+#             if not user:
+#                 raise ValidationError("User not found with this email/phone number")
+#             if not user.check_password(password):
+#                 raise ValidationError("Incorrect password")
+#             data = super().validate(attrs)
+#             data.update({
+#                 'user': {
+#                     'username': user.username,
+#                     'email': user.email,
+#                 }
+#             })
+#             return data
+#         except UserEx.DoesNotExist:
+#             raise ValidationError("User with given credentials not found")

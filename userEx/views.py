@@ -6,7 +6,9 @@ from rest_framework.exceptions import ValidationError
 from .serializers import *
 import logging
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 logger = logging.getLogger(__name__)
 
 class UserRegistrationAPIView(APIView):
@@ -21,5 +23,23 @@ class UserRegistrationAPIView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 # ========== user Login ==============
-class LoginAPIView(TokenObtainPairView):
-    serializer_class = CustomTokenObtainPairSerializer
+class UserLoginAPIView(APIView):
+    def post(self, request):
+        username_or_email_or_phone = request.data.get('username_or_email_or_phone')
+        password = request.data.get('password')
+        if not username_or_email_or_phone or not password:
+            return Response({'detail': 'Username or email or phone and password are required.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        try:
+            if '@' in username_or_email_or_phone:
+                user = UserEx.objects.get(email=username_or_email_or_phone)
+            else:
+                user = UserEx.objects.get(phone_number=username_or_email_or_phone)
+            user = authenticate(request, username=user.username, password=password)
+            if user is not None:
+                login(request, user)
+                return Response({"message": "Login successful."}, status=status.HTTP_200_OK)
+            else:
+                return Response({"detail": "Invalid credentials."}, status=status.HTTP_400_BAD_REQUEST)
+        except UserEx.DoesNotExist:
+            return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
