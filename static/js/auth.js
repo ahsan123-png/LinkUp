@@ -72,53 +72,42 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-
-
     // Handle Login Form Submission
-    // const loginForm = document.getElementById('login-form');
-    // if (loginForm) {
-    //     loginForm.addEventListener('submit', function (e) {
-    //         e.preventDefault();
+const loginForm = document.getElementById('login-form');
+if (loginForm) {
+    loginForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const identifier = document.getElementById('identifier').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const data = {
+            username_or_email_or_phone: identifier, 
+            password: password,
+        };
+        fetch('http://127.0.0.1:8000/users/login/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw err;
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert("Login Successful!");
+            window.location.href = "/home"; 
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("An error occurred. Please try again.");
+        });
+    });
+} else {
+    console.error('Login form not found');
+}
 
-    //         // Get identifier and password
-    //         const identifier = document.getElementById('identifier').value.trim();
-    //         const password = document.getElementById('password').value.trim();
-
-    //         // Prepare data for API
-    //         const data = {
-    //             username: identifier, // Assuming "username" can be email or phone
-    //             password: password,
-    //         };
-
-    //         // Send POST request to backend
-    //         fetch('http://127.0.0.1:8000/users/login/', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify(data),
-    //         })
-    //         .then(response => {
-    //             if (!response.ok) {
-    //                 return response.json().then(err => {
-    //                     throw err;
-    //                 });
-    //             }
-    //             return response.json();
-    //         })
-    //         .then(data => {
-    //             localStorage.setItem('access_token', data.access_token);
-    //             localStorage.setItem('refresh_token', data.refresh_token);
-
-    //             alert("Login Successful!");
-    //             window.location.href = homeUrl;
-    //         })
-    //         .catch(error => {
-    //             console.error('Error:', error);
-    //             alert("An error occurred. Please try again.");
-    //         });
-    //     });
-    // } else {
-    //     console.error('Login form not found');
-    // }
-// });
