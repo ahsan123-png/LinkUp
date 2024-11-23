@@ -99,10 +99,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_CREDENTIALS = True
 # Disable CSRF checks for API views
 CSRF_COOKIE_HTTPONLY = True
-CSRF_TRUSTED_ORIGINS = [
+# CSRF_TRUSTED_ORIGINS = [
     # 'http://localhost:3000',  # Add your frontend domain(s) here
     # 'https://your-frontend-domain.com',  # Production frontend
-]
+# ]
 
 # Disable CSRF for views under REST API
 # REST_FRAMEWORK = {
