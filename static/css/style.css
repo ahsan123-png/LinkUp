@@ -33,6 +33,7 @@ body {
     justify-content: space-between;
     align-items: center;
     color: #ccc;
+    margin-bottom: 20px;
 }
 
 .chat-list {
@@ -329,4 +330,73 @@ body {
     #attachment-btn, #send-btn {
         font-size: 1.1rem;
     }
+}
+
+
+/* Styling for the profile section */
+.profile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #333; /* Background color */
+    border-bottom: 2px solid #ddd; /* Border line under the profile section */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for a floating effect */
+    margin-bottom: 20px;
+}
+
+.profile img {
+    width: 50px; /* Profile picture size */
+    height: 50px;
+    border-radius: 50%; /* Makes the image circular */
+    margin-right: 15px;
+    border: 2px solid #4caf50; /* Thin border around the profile image */
+}
+
+.profile .user-info {
+    flex-grow: 1;
+    margin-left: 15px;
+}
+
+.profile .user-info h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ddd; /* Text color */
+}
+
+.profile .user-info p {
+    margin: 0;
+    font-size: 14px;
+    color: #777; /* Lighter text color */
+}
+
+.profile button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #555;
+    margin-left: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.profile button:hover {
+    background-color: #4caf50; /* Light hover effect */
+}
+
+.profile button i {
+    font-size: 18px; /* Icon size */
+}
+
+.profile button#logout-btn {
+    color: #e74c3c; /* Logout button color (red) */
+    font-weight: bold;
+}
+
+.profile button#logout-btn:hover {
+    background-color: #4caf50; /* Light red hover effect */
 }

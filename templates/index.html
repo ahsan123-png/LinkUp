@@ -13,30 +13,42 @@
     <div class="chat-app">
         <!-- Sidebar (Chats list) -->
         <div class="sidebar">
+            <div class="profile">
+                <a href="{% url "profile" %}"><img src="{% static 'media/profile.png' %}" alt="User"></a>
+                <div class="user-info">
+                    <h3>Current User</h3>
+                    <p>Software Engineer</p>
+                </div>
+                <button id="logout-btn">Logout</button>
+                <button id="settings-btn"><i class="fas fa-cog"></i></button>
+                <button id="notifications-btn"><i class="fas fa-bell"></i></button>
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+                <button id="more-btn"><i class="fas fa-ellipsis-v"></i></button>
+            </div>            
             <div class="sidebar-header">
                 <h2>Chats</h2>
                 <button id="new-chat">+</button>
             </div>
             <div class="chat-list">
                 <!-- Chat items -->
-                <div class="chat-item active" data-user="+92 321 9067312">
+                <div class="chat-item active" data-user="Raoof Gohar">
                     <img src="{% static 'media/profile.png' %}" alt="User">
                     <div class="chat-info">
-                        <h4>+92 321 9067312</h4>
+                        <h4>Raoof Gohar</h4>
                         <p>Get well soon</p>
                     </div>
                 </div>
-                <div class="chat-item" data-user="+92 312 1234567">
+                <div class="chat-item" data-user="Anis Butt">
                     <img src="{% static 'media/profile2.jpg' %}" alt="User">
                     <div class="chat-info">
-                        <h4>+92 312 1234567</h4>
+                        <h4>Anis Butt</h4>
                         <p>Can we meet at 5 PM?</p>
                     </div>
                 </div>
-                <div class="chat-item" data-user="+92 300 9876543">
+                <div class="chat-item" data-user="Ahsan Raja">
                     <img src="{% static 'media/profile3.jpg' %}" alt="User">
                     <div class="chat-info">
-                        <h4>+92 300 9876543</h4>
+                        <h4>Ahsan Raja</h4>
                         <p>See you at the meeting.</p>
                     </div>
                 </div>
@@ -48,7 +60,7 @@
         <div class="chat-window">
             <!-- Chat header -->
             <div class="chat-header">
-                <h4 id="chat-header-user">+92 321 9067312</h4>
+                <h4 id="chat-header-user">Raoof Gohar</h4>
                 <div class="chat-actions">
                     <button><i class="fas fa-phone-alt"></i></button>
                     <button><i class="fas fa-video"></i></button>
@@ -59,7 +71,7 @@
             <!-- Chat messages -->
             <div class="chat-content" id="chat-content">
                 <!-- Chat for user +92 321 9067312 -->
-                <div class="chat-messages" data-user="+92 321 9067312">
+                <div class="chat-messages" data-user="Raoof Gohar">
                     <div class="message received">
                         <p>Sure, no problem. Get well soon.</p>
                         <span class="message-time">12:26 PM</span>
@@ -70,7 +82,7 @@
                     </div>
                 </div>
                 <!-- Chat for user +92 312 1234567 -->
-                <div class="chat-messages hidden" data-user="+92 312 1234567">
+                <div class="chat-messages hidden" data-user="Anis Butt">
                     <div class="message received">
                         <p>Can we meet at 5 PM?</p>
                         <span class="message-time">10:00 AM</span>
@@ -81,7 +93,7 @@
                     </div>
                 </div>
                 <!-- Chat for user +92 300 9876543 -->
-                <div class="chat-messages hidden" data-user="+92 300 9876543">
+                <div class="chat-messages hidden" data-user="Ahsan Raja">
                     <div class="message sent">
                         <p>See you at the meeting tomorrow.</p>
                         <span class="message-time">9:00 AM</span>
