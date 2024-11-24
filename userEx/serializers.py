@@ -10,6 +10,11 @@ import logging
 import pprint
 logger = logging.getLogger(__name__)
 # =========== Serializer ================
+class UserExSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserEx
+        fields = ['id', 'username', 'phone_number', 'email', 'is_verified']
+        read_only_fields = ['id', 'username']
 class UserRegistrationSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True)

@@ -1,6 +1,7 @@
 # views.py
 from rest_framework import generics, status
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.exceptions import ValidationError
 from .serializers import *
@@ -43,3 +44,30 @@ class UserLoginAPIView(APIView):
                 return Response({"detail": "Invalid credentials."}, status=status.HTTP_400_BAD_REQUEST)
         except UserEx.DoesNotExist:
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+# ============== get user by id =================
+class UserExView(generics.GenericAPIView):
+    queryset = UserEx.objects.all()  # Queryset for the UserEx model
+    serializer_class = UserExSerializer
+    def get(self, request, user_id=None):
+        if user_id:
+            # Get user by ID
+            user = get_object_or_404(self.queryset, id=user_id)
+            serializer = self.serializer_class(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            users = self.queryset.select_related().only('id', 'username', 'email', 'phone_number', 'is_verified')
+            serializer = self.serializer_class(users, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, user_id):
+        user = get_object_or_404(self.queryset, id=user_id)
+        serializer = self.serializer_class(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, user_id):
+        user = get_object_or_404(self.queryset, id=user_id)
+        user.delete()
+        return Response({"message": "User deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
