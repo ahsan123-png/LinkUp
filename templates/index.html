@@ -18,15 +18,29 @@
                 <button id="new-chat">+</button>
             </div>
             <div class="chat-list">
-                <!-- Sample chat items -->
-                <div class="chat-item active">
-                    <img src="{% static "media/profile.png" %}" alt="User">
+                <!-- Chat items -->
+                <div class="chat-item active" data-user="+92 321 9067312">
+                    <img src="{% static 'media/profile.png' %}" alt="User">
                     <div class="chat-info">
                         <h4>+92 321 9067312</h4>
                         <p>Get well soon</p>
                     </div>
                 </div>
-                <!-- Add more chat items here -->
+                <div class="chat-item" data-user="+92 312 1234567">
+                    <img src="{% static 'media/profile2.jpg' %}" alt="User">
+                    <div class="chat-info">
+                        <h4>+92 312 1234567</h4>
+                        <p>Can we meet at 5 PM?</p>
+                    </div>
+                </div>
+                <div class="chat-item" data-user="+92 300 9876543">
+                    <img src="{% static 'media/profile3.jpg' %}" alt="User">
+                    <div class="chat-info">
+                        <h4>+92 300 9876543</h4>
+                        <p>See you at the meeting.</p>
+                    </div>
+                </div>
+                <!-- Add more chat items -->
             </div>
         </div>
 
@@ -34,7 +48,7 @@
         <div class="chat-window">
             <!-- Chat header -->
             <div class="chat-header">
-                <h4>+92 321 9067312</h4>
+                <h4 id="chat-header-user">+92 321 9067312</h4>
                 <div class="chat-actions">
                     <button><i class="fas fa-phone-alt"></i></button>
                     <button><i class="fas fa-video"></i></button>
@@ -43,23 +57,46 @@
             </div>
 
             <!-- Chat messages -->
-            <div class="chat-content">
-                <!-- Sample messages -->
-                <div class="message received">
-                    <p>Sure, no problem. Get well soon.</p>
-                    <span class="message-time">12:26 PM</span>
+            <div class="chat-content" id="chat-content">
+                <!-- Chat for user +92 321 9067312 -->
+                <div class="chat-messages" data-user="+92 321 9067312">
+                    <div class="message received">
+                        <p>Sure, no problem. Get well soon.</p>
+                        <span class="message-time">12:26 PM</span>
+                    </div>
+                    <div class="message sent">
+                        <p>See you at 3 PM</p>
+                        <span class="message-time">7:22 PM</span>
+                    </div>
                 </div>
-                <div class="message sent">
-                    <p>See you at 3 PM</p>
-                    <span class="message-time">7:22 PM</span>
+                <!-- Chat for user +92 312 1234567 -->
+                <div class="chat-messages hidden" data-user="+92 312 1234567">
+                    <div class="message received">
+                        <p>Can we meet at 5 PM?</p>
+                        <span class="message-time">10:00 AM</span>
+                    </div>
+                    <div class="message sent">
+                        <p>Sure, I'll be there.</p>
+                        <span class="message-time">10:15 AM</span>
+                    </div>
                 </div>
-                <!-- More messages -->
+                <!-- Chat for user +92 300 9876543 -->
+                <div class="chat-messages hidden" data-user="+92 300 9876543">
+                    <div class="message sent">
+                        <p>See you at the meeting tomorrow.</p>
+                        <span class="message-time">9:00 AM</span>
+                    </div>
+                    <div class="message received">
+                        <p>Got it! See you there.</p>
+                        <span class="message-time">9:30 AM</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Input and attachments -->
             <div class="chat-input-section">
                 <button id="attachment-btn">📎</button>
-                <input type="text" placeholder="Type a message">
+                <input type="text" placeholder="Type a message" id="message-input">
                 <button id="send-btn">Send</button>
             </div>
 
@@ -75,6 +112,6 @@
         </div>
     </div>
 
-    <script src="{% static "js/app.js" %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
 </body>
 </html>

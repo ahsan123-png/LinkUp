@@ -55,3 +55,41 @@ sendBtn.addEventListener('click', () => {
         chatContent.scrollTop = chatContent.scrollHeight;
     }
 });
+$(document).ready(function () {
+    // Handle chat switching
+    $(".chat-item").click(function () {
+        const selectedUser = $(this).data("user");
+
+        // Highlight the selected chat item
+        $(".chat-item").removeClass("active");
+        $(this).addClass("active");
+
+        // Update the chat header
+        $("#chat-header-user").text(selectedUser);
+
+        // Show the selected chat messages and hide others
+        $(".chat-messages").addClass("hidden");
+        $(`.chat-messages[data-user='${selectedUser}']`).removeClass("hidden");
+    });
+
+    // Handle sending a message
+    $("#send-btn").click(function () {
+        const messageInput = $("#message-input").val().trim();
+        const currentUser = $("#chat-header-user").text();
+
+        if (messageInput === "") {
+            alert("Please type a message!");
+            return;
+        }
+        // Create and append the sent message
+        const messageHTML = `
+            <div class="message sent">
+                <p>${messageInput}</p>
+                <span class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
+        `;
+        $(`.chat-messages[data-user='${currentUser}']`).append(messageHTML);
+        // Clear the input field
+        $("#message-input").val("");
+    });
+});
