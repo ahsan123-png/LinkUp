@@ -71,3 +71,15 @@ class UserExView(generics.GenericAPIView):
         user = get_object_or_404(self.queryset, id=user_id)
         user.delete()
         return Response({"message": "User deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+
+
+# getuser isinstance
+def getUserEx(user):
+    if isinstance(user, UserEx):
+        return user
+    else:
+        try:
+            return UserEx.objects.get(id=user.id)
+        except UserEx.DoesNotExist:
+            return None
+    

@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Error - Page Not Found</title>
+    <link rel="stylesheet" href="{% static "css/notfound.css" %}">
+</head>
+<body>
+    <div class="container">
+        <div class="error-box">
+            <img src="https://img.icons8.com/ios-glyphs/100/FFFFFF/cat.png" alt="Error Cat" class="error-cat">
+            <h1>404 ERROR</h1>
+            <p class="error-text">The page you requested could not be found.</p>
+            <p class="error-desc">We searched high and low but couldn't find what you're looking for. Let's find a better place for you to go.</p>
+            <a href="{% url "loginUser" %}" class="go-home-btn">GO TO HOMEPAGE</a>
+        </div>
+    </div>
+</body>
+</html>
