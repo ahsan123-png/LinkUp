@@ -16,7 +16,7 @@
             <div class="profile">
                 <a href="{% url "profile" %}"><img src="{% static 'media/profile.png' %}" alt="User"></a>
                 <div class="user-info">
-                    <h3>Current User</h3>
+                    <h3>{{name}}</h3>
                     <p>Software Engineer</p>
                 </div>
                 <a href="{% url "user_logout" %}"><button id="logout-btn">Logout</button></a>

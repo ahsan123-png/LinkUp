@@ -7,7 +7,9 @@ from django.utils import timezone
 class UserEx(User):
     phone_number = models.CharField(max_length=15, unique=True)
     full_name = models.CharField(max_length=15, blank=True,null=True)
+    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
     is_verified = models.BooleanField(default=False)
+    status=models.CharField(max_length=150,null=True,blank=True , default='None')
 
 class Group(models.Model):
     name = models.CharField(max_length=255)
