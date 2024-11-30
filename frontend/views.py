@@ -11,11 +11,13 @@ def home(request):
     if user.is_authenticated:
         user=getUserEx(user)
         user_ex=UserEx.objects.get(id=user.id)
-        
+        users = UserEx.objects.exclude(id=user.id)
         context={
             "name" : user_ex.first_name,
+            "status":user_ex.status,
             "email":user_ex.email,
             'profile_image': user.profile_image.url if user.profile_image else None,
+            "users" : users
 
         }
         return render(request, 'index.html',context)

@@ -14,6 +14,98 @@
         <!-- Sidebar (Chats list) -->
         <div class="sidebar">
             <div class="profile">
+                <a href="{% url 'profile' %}">
+                    <img src="{{ profile_image }}" alt="User">
+                </a>
+                <div class="user-info">
+                    <h3>{{ user.first_name }}</h3>
+                    <p>{{ status }}</p>
+                </div>
+                <a href="{% url 'user_logout' %}"><button id="logout-btn">Logout</button></a>
+                <button id="settings-btn"><i class="fas fa-cog"></i></button>
+                <button id="notifications-btn"><i class="fas fa-bell"></i></button>
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+                <button id="more-btn"><i class="fas fa-ellipsis-v"></i></button>
+            </div>
+
+            <div class="sidebar-header">
+                <h2>Chats</h2>
+                <button id="new-chat">+</button>
+            </div>
+
+            <div class="chat-list">
+                <!-- Dynamically generate chat items for each user -->
+                {% for user in users %}
+                    <div class="chat-item" data-user="{{ user.first_name }}">
+                        <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'media/default-profile.png' %}{% endif %}" alt="User">
+                        <div class="chat-info">
+                            <h4>{{ user.first_name }}</h4>
+                            <p>{{ user.status }}</p> <!--in Future we store chats -->
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Main chat window -->
+        <div class="chat-window">
+            <!-- Chat header -->
+            <div class="chat-header">
+                <h4 id="chat-header-user">Select a User</h4>
+                <div class="chat-actions">
+                    <button><i class="fas fa-phone-alt"></i></button>
+                    <button><i class="fas fa-video"></i></button>
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+
+            <!-- Chat messages -->
+            <div class="chat-content" id="chat-content">
+                <!-- Initially no messages -->
+            </div>
+
+            <!-- Input and attachments -->
+            <div class="chat-input-section">
+                <button id="attachment-btn">📎</button>
+                <input type="text" placeholder="Type a message" id="message-input">
+                <button id="send-btn">Send</button>
+            </div>
+
+            <!-- Attachment Popup -->
+            <div id="attachment-popup" class="popup hidden">
+                <div class="popup-option" id="photos-videos">Photos & Videos</div>
+                <div class="popup-option" id="camera">Camera</div>
+                <div class="popup-option" id="document">Document</div>
+            </div>
+
+            <!-- Overlay for closing popup -->
+            <div id="overlay" class="overlay hidden"></div>
+        </div>
+    </div>
+
+    <div id="home-url" data-home-url="{% url 'home' %}"></div>
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
+
+
+
+
+<!--{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="http://localhost:8000/static/css/style.css">
+</head>
+<body>
+    <div class="chat-app">
+        <div class="sidebar">
+            <div class="profile">
                 <a href="{% url "profile" %}"><img src="{{ profile_image }}" alt="User"></a>
                 <div class="user-info">
                     <h3>{{name}}</h3>
@@ -30,7 +122,6 @@
                 <button id="new-chat">+</button>
             </div>
             <div class="chat-list">
-                <!-- Chat items -->
                 <div class="chat-item active" data-user="Raoof Gohar">
                     <img src="{% static 'media/profile.png' %}" alt="User">
                     <div class="chat-info">
@@ -52,12 +143,9 @@
                         <p>See you at the meeting.</p>
                     </div>
                 </div>
-                <!-- Add more chat items -->
             </div>
         </div>
-        <!-- Main chat window -->
         <div class="chat-window">
-            <!-- Chat header -->
             <div class="chat-header">
                 <h4 id="chat-header-user">Raoof Gohar</h4>
                 <div class="chat-actions">
@@ -66,9 +154,7 @@
                     <button><i class="fas fa-search"></i></button>
                 </div>
             </div>
-            <!-- Chat messages -->
             <div class="chat-content" id="chat-content">
-                <!-- Chat for user +92 321 9067312 -->
                 <div class="chat-messages" data-user="Raoof Gohar">
                     <div class="message received">
                         <p>Sure, no problem. Get well soon.</p>
@@ -79,7 +165,7 @@
                         <span class="message-time">7:22 PM</span>
                     </div>
                 </div>
-                <!-- Chat for user +92 312 1234567 -->
+
                 <div class="chat-messages hidden" data-user="Anis Butt">
                     <div class="message received">
                         <p>Can we meet at 5 PM?</p>
@@ -90,7 +176,6 @@
                         <span class="message-time">10:15 AM</span>
                     </div>
                 </div>
-                <!-- Chat for user +92 300 9876543 -->
                 <div class="chat-messages hidden" data-user="Ahsan Raja">
                     <div class="message sent">
                         <p>See you at the meeting tomorrow.</p>
@@ -102,23 +187,20 @@
                     </div>
                 </div>
             </div>
-            <!-- Input and attachments -->
             <div class="chat-input-section">
                 <button id="attachment-btn">📎</button>
                 <input type="text" placeholder="Type a message" id="message-input">
                 <button id="send-btn">Send</button>
             </div>
-            <!-- Attachment Popup -->
             <div id="attachment-popup" class="popup hidden">
                 <div class="popup-option" id="photos-videos">Photos & Videos</div>
                 <div class="popup-option" id="camera">Camera</div>
                 <div class="popup-option" id="document">Document</div>
             </div>
-            <!-- Overlay for closing popup -->
             <div id="overlay" class="overlay hidden"></div>
         </div>
     </div>
     <div id="home-url" data-home-url="{% url 'home' %}"></div>
     <script src="{% static 'js/app.js' %}"></script>
 </body>
-</html>
+</html> -->
