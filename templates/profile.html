@@ -1,30 +1,50 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
     <title>Profile</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="profile-container">
+      <!-- Form that includes the image upload field -->
+      <form method="POST" action="{% url 'profile' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- Profile Image Section -->
         <div class="profile-image">
-            <img id="profile-img" src="{{ user.profile_images.url }}" alt="Profile Image">
-            <label class="edit-icon" for="file-input">
-                <i class="fas fa-camera"></i>
-            </label>
-            <input type="file" name="profile_image" id="file-input" accept="image/*" style="display:none;">
+          <img id="profile-img" src="{{ profile_image }}" alt="Profile Image"/>
+          <label class="edit-icon" for="file-input"><i class="fas fa-camera"></i></label>
+          <input type="file" name="profile_image" id="file-input" accept="image/*" style="display:none;" />
         </div>
+        <!-- User Status Section -->
         <h2 id="user-name">{{ name }}</h2>
         <div class="status" id="user-status">{{ status }}</div>
-        <form method="POST" action="{% url 'profile' %}" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="text" name="status" id="status-input" placeholder="Update Status" value="{{ status }}">
-            <!--<input type="text" name="name" id="name-input" placeholder="Update Name" value="{{ name }}"> -->
-            <button type="submit" id="update-profile">Update Profile</button>
-        </form>
+        <input type="text" name="status" id="status-input" placeholder="Update Status" value="{{ status }}" />
+        <!-- Submit Button Section -->
+        <div class="button-row">
+          <button type="submit" id="update-profile">Update Profile</button>
+          <a href="{% url 'home' %}">
+            <button type="button" style="margin-left: 10px;">Go Home</button>
+          </a>
+        </div>
+      </form>
     </div>
-</body>
+    <!-- Optional: JavaScript to Preview Image Before Upload -->
+    <script>
+      // Preview the image when a user selects a file
+      document.getElementById('file-input').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            document.getElementById('profile-img').src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    </script>
+  </body>
 </html>

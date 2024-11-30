@@ -10,17 +10,19 @@ def home(request):
     user=request.user
     if user.is_authenticated:
         user=getUserEx(user)
-        user_ex=User.objects.get(id=user.id)
+        user_ex=UserEx.objects.get(id=user.id)
+        
         context={
             "name" : user_ex.first_name,
             "email":user_ex.email,
+            'profile_image': user.profile_image.url if user.profile_image else None,
+
         }
         return render(request, 'index.html',context)
     else:
         return redirect('loginUser')
 #======== Update API Handle ====================
-
-@login_required
+# @login_required
 def profile(request):
     user = request.user
     if user.is_authenticated:
@@ -51,7 +53,6 @@ def profile(request):
             'status': user_ex.status,
             'profile_image': user_ex.profile_image.url if user_ex.profile_image else None
         }
-
         return render(request, 'profile.html', context)
 def loginUser(request):
     return render(request, 'login.html')
