@@ -18,6 +18,8 @@ INSTALLED_APPS = [
     'userEx',
     'frontend',
     'corsheaders',
+    'chats',
+    'channels',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -45,7 +47,7 @@ TEMPLATES = [
         },
     },
 ]
-WSGI_APPLICATION = 'LinkUp.wsgi.application'
+# WSGI_APPLICATION = 'LinkUp.wsgi.application'
 ASGI_APPLICATION = 'LinkUp.asgi.application'
 DATABASES = {
     'default': {
@@ -86,6 +88,19 @@ REST_FRAMEWORK = {
 #     'SIGNING_KEY': SECRET_KEY,
 #     'AUTH_HEADER_TYPES': ('Bearer',),
 # }
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # For development
+    },
+}
+#CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("127.0.0.1", 6379)],  # Redis must be running locally on port 6379
+#         },
+#     },
+# }
 CORS_ALLOW_ALL_ORIGINS = True
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -114,3 +129,8 @@ CSRF_COOKIE_HTTPONLY = True
 #         'rest_framework.permissions.AllowAny',  # Change to a more restrictive permission if needed
 #     ],
 # }
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
