@@ -6,6 +6,7 @@ SECRET_KEY = 'django-insecure-1p*rf4v^33aems3sfv-j6ehqyxqwrn1x&bcdnzkt5gtqlb8ad!
 DEBUG = True
 ALLOWED_HOSTS = []
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -20,6 +21,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'chats',
     'channels',
+    
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -89,10 +91,19 @@ REST_FRAMEWORK = {
 #     'AUTH_HEADER_TYPES': ('Bearer',),
 # }
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",  # For development
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [("127.0.0.1", 6379)],
+        },
     },
 }
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer",  # For development
+#     },
+# }
 #CHANNEL_LAYERS = {
 #     "default": {
 #         "BACKEND": "channels_redis.core.RedisChannelLayer",
