@@ -155,7 +155,7 @@ november/media
 media/*
 november/staticfiles
 *.env
-*.jpg
+
 
 \__pycache__
 

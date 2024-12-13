@@ -37,7 +37,7 @@
                 <!-- Dynamically generate chat items for each user -->
                 {% for user in users %}
                     <div class="chat-item" data-user="{{ user.first_name }}">
-                        <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'media/default-profile.png' %}{% endif %}" alt="User">
+                        <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'media/profile_images/profile.jpg' %}{% endif %}" alt="User">
                         <div class="chat-info">
                             <h4>{{ user.first_name }}</h4>
                             <p>{{ user.status }}</p> <!--in Future we store chats -->

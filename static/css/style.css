@@ -99,7 +99,7 @@ body {
     flex-grow: 1;
     padding: 10px;
     overflow-y: auto;
-    background: url('{% static "images/whatsapp-bg.png" %}') no-repeat center center;
+    background: url('../images/whatsapp-bg.png') no-repeat center center;
     background-size: cover;
 }
 
