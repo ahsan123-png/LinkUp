@@ -36,7 +36,7 @@
             <div class="chat-list">
                 <!-- Dynamically generate chat items for each user -->
                 {% for user in users %}
-                    <div class="chat-item" data-user="{{ user.first_name }}">
+                    <div class="chat-item" data-user="{{ user.username }}">
                         <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'media/profile_images/profile.jpg' %}{% endif %}" alt="User">
                         <div class="chat-info">
                             <h4>{{ user.first_name }}</h4>
