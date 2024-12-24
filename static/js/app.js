@@ -1,29 +1,19 @@
-// WebSocket instance
 let currentSocket = null;
-
-// DOM Elements
 const attachmentBtn = document.getElementById('attachment-btn');
 const attachmentPopup = document.getElementById('attachment-popup');
 const overlay = document.getElementById('overlay');
 const sendBtn = document.getElementById('send-btn');
 const chatContent = document.querySelector('.chat-content');
 const inputField = document.querySelector('input[type="text"]');
-
-// Base API URL
-const apiUrl = "http://127.0.0.1:8000/users/api/chat"; // Update with your backend's URL
-
-// Toggle attachment popup
 attachmentBtn.addEventListener('click', () => {
     attachmentPopup.classList.toggle('hidden');
     overlay.classList.toggle('hidden');
 });
-
 overlay.addEventListener('click', () => {
     attachmentPopup.classList.add('hidden');
     overlay.classList.add('hidden');
 });
 
-// Handle attachment options
 function closePopup() {
     attachmentPopup.classList.add('hidden');
     overlay.classList.add('hidden');
@@ -69,17 +59,12 @@ async function fetchChatHistory(selectedUser) {
         console.error("Error fetching chat history:", error);
     }
 }
-
-// Handle sending messages
 sendBtn.addEventListener('click', () => {
     const message = inputField.value.trim();
     if (message) {
-        // Send message through WebSocket
         if (currentSocket && currentSocket.readyState === WebSocket.OPEN) {
             currentSocket.send(JSON.stringify({ message: message }));
         }
-
-        // Display sent message locally
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', 'sent');
         messageElement.innerHTML = `<p>${message}</p><span class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
@@ -88,34 +73,22 @@ sendBtn.addEventListener('click', () => {
         chatContent.scrollTop = chatContent.scrollHeight;
     }
 });
-
-// jQuery to handle chat switching
 $(document).ready(function () {
     $(".chat-item").click(function () {
-        const selectedUser = $(this).data("user"); // This should now be the username
-
-        // Update active chat UI
+        const selectedUser = $(this).data("user");
         $(".chat-item").removeClass("active");
         $(this).addClass("active");
-        $("#chat-header-user").text(selectedUser); // Display username in the chat header
-
-        // Fetch chat history for the selected user
-        fetchChatHistory(selectedUser);
-
-        // Close existing WebSocket connection
+        $("#chat-header-user").text(selectedUser);
+        $(".chat-messages").addClass("hidden");
+        $(`.chat-messages[data-user='${selectedUser}']`).removeClass("hidden");
         if (currentSocket) {
             currentSocket.close();
         }
-
-        // Establish new WebSocket connection for the selected user
-        const socketUrl = `ws://127.0.0.1:8000/ws/chat/${selectedUser}/`; // Use username here
+        const socketUrl = `ws://127.0.0.1:8000/ws/chat/${selectedUser}/`;
         currentSocket = new WebSocket(socketUrl);
-
         currentSocket.onmessage = function (event) {
             const data = JSON.parse(event.data);
             const { message, sender } = data;
-
-            // Append received message to the chat
             const messageHTML = `
                 <div class="message received">
                     <p>${message}</p>
@@ -124,31 +97,23 @@ $(document).ready(function () {
             `;
             $(`.chat-messages[data-user='${sender}']`).append(messageHTML);
         };
-
         currentSocket.onerror = function (error) {
             console.error("WebSocket Error:", error);
         };
-
         currentSocket.onclose = function () {
             console.warn("WebSocket closed for user:", selectedUser);
         };
     });
-
     $("#send-btn").click(function () {
         const messageInput = $("#message-input").val().trim();
-        const currentUser = $("#chat-header-user").text(); // The username of the currently selected user
-
+        const currentUser = $("#chat-header-user").text();
         if (messageInput === "") {
             alert("Please type a message!");
             return;
         }
-
-        // Send message to WebSocket
         if (currentSocket && currentSocket.readyState === WebSocket.OPEN) {
             currentSocket.send(JSON.stringify({ message: messageInput }));
         }
-
-        // Display sent message in the chat
         const messageHTML = `
             <div class="message sent">
                 <p>${messageInput}</p>
