@@ -33,6 +33,32 @@ document.getElementById('document').addEventListener('click', () => {
     alert('Select Documents');
     closePopup();
 });
+
+// Fetch chat history from the server
+async function fetchChatHistory(selectedUser) {
+    try {
+        const response = await fetch(`${apiUrl}/history/${selectedUser}/`);
+        const chatHistory = await response.json();
+
+        // Clear existing chat messages
+        chatContent.innerHTML = "";
+
+        // Append messages to chat content
+        chatHistory.forEach(message => {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', message.sender === selectedUser ? 'received' : 'sent');
+            messageElement.innerHTML = `
+                <p>${message.content}</p>
+                <span class="message-time">${new Date(message.sent_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            `;
+            chatContent.appendChild(messageElement);
+        });
+
+        chatContent.scrollTop = chatContent.scrollHeight;
+    } catch (error) {
+        console.error("Error fetching chat history:", error);
+    }
+}
 sendBtn.addEventListener('click', () => {
     const message = inputField.value.trim();
     if (message) {
@@ -98,3 +124,28 @@ $(document).ready(function () {
         $("#message-input").val("");
     });
 });
+
+    $("#send-btn").click(function () {
+        const messageInput = $("#message-input").val().trim();
+        const currentUser = $("#chat-header-user").text();
+
+        if (messageInput === "") {
+            alert("Please type a message!");
+            return;
+        }
+
+        // Send message to WebSocket
+        if (currentSocket && currentSocket.readyState === WebSocket.OPEN) {
+            currentSocket.send(JSON.stringify({ message: messageInput }));
+        }
+
+        // Display sent message in the chat
+        const messageHTML = `
+            <div class="message sent">
+                <p>${messageInput}</p>
+                <span class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
+        `;
+        $(`.chat-messages[data-user='${currentUser}']`).append(messageHTML);
+        $("#message-input").val("");
+    });

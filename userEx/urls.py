@@ -7,4 +7,7 @@ urlpatterns = [
     #====== users crediotionls ==================
     path('register/', UserRegistrationAPIView.as_view(),name="registerUser"),
     path('login/', UserLoginAPIView.as_view(), name='login'),
+    path('api/chat/history/<str:receiver_username>/', chat_history, name='chat_history'),
+    path('api/chat/send/', send_private_message, name='send_private_message'),
+
 ]

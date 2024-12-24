@@ -91,3 +91,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 #             return data
 #         except UserEx.DoesNotExist:
 #             raise ValidationError("User with given credentials not found")
+
+
+
+class PrivateMessageSerializer(serializers.ModelSerializer):
+    sender = serializers.StringRelatedField()
+    receiver = serializers.StringRelatedField()
+
+    class Meta:
+        model = PrivateMessage
+        fields = ['id', 'sender', 'receiver', 'content', 'media', 'sent_at']
+
+
