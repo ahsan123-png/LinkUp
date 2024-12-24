@@ -30,17 +30,17 @@ function closePopup() {
 }
 
 document.getElementById('photos-videos').addEventListener('click', () => {
-    alert('Select Photos & Videos');
+    // Replace with actual photo/video selection functionality
     closePopup();
 });
 
 document.getElementById('camera').addEventListener('click', () => {
-    alert('Open Camera');
+    // Replace with camera functionality
     closePopup();
 });
 
 document.getElementById('document').addEventListener('click', () => {
-    alert('Select Documents');
+    // Replace with document selection functionality
     closePopup();
 });
 
@@ -115,14 +115,15 @@ $(document).ready(function () {
             const data = JSON.parse(event.data);
             const { message, sender } = data;
 
-            // Append received message to the chat
-            const messageHTML = `
-                <div class="message received">
-                    <p>${message}</p>
-                    <span class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                </div>
+            // Append received message to the chat content
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'received');
+            messageElement.innerHTML = `
+                <p>${message}</p>
+                <span class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
             `;
-            $(`.chat-messages[data-user='${sender}']`).append(messageHTML);
+            chatContent.appendChild(messageElement);
+            chatContent.scrollTop = chatContent.scrollHeight; // Scroll to the latest message
         };
 
         currentSocket.onerror = function (error) {
@@ -139,8 +140,7 @@ $(document).ready(function () {
         const currentUser = $("#chat-header-user").text();
 
         if (messageInput === "") {
-            alert("Please type a message!");
-            return;
+            return; // Don't send empty messages
         }
 
         // Send message to WebSocket
@@ -155,7 +155,8 @@ $(document).ready(function () {
                 <span class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
         `;
-        $(`.chat-messages[data-user='${currentUser}']`).append(messageHTML);
-        $("#message-input").val("");
+        chatContent.append(messageHTML);
+        $("#message-input").val(""); // Clear the input field
+        chatContent.scrollTop = chatContent.scrollHeight; // Scroll to latest message
     });
 });
