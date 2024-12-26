@@ -96,7 +96,8 @@ body {
 }
 
 .chat-content {
-    flex-grow: 1;
+    display: flex; 
+    flex-direction: column;
     padding: 10px;
     overflow-y: auto;
     background: url('../images/whatsapp-bg.png') no-repeat center center;
@@ -104,20 +105,25 @@ body {
 }
 
 .message {
-    margin-bottom: 10px;
     max-width: 60%;
+    margin: 10px 0;
     padding: 10px;
     border-radius: 10px;
-}
-
-.message.received {
-    background-color: #333;
-    align-self: flex-start;
+    color: #fff;
+    font-size: 1rem;
+    display: inline-block;
 }
 
 .message.sent {
-    background-color: #4CAF50;
-    align-self: flex-end;
+    align-self: flex-end; /* Right-aligned */
+    background-color: #4CAF50; /* Green */
+    border-top-right-radius: 0; /* Add style for distinction */
+}
+
+.message.received {
+    align-self: flex-start; /* Left-aligned */
+    background-color: #323; /* Dark Gray */
+    border-top-left-radius: 0; /* Add style for distinction */
 }
 
 .message-time {

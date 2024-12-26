@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
-    <link rel="stylesheet" href="http://localhost:8000/static/css/style.css">
+    <link rel="stylesheet" href="{% static  "css/style.css" %}">
 </head>
 <body>
     <div class="chat-app">
@@ -59,7 +59,7 @@
             <div class="chat-input-section">
                 <button id="attachment-btn">📎</button>
                 <input type="text" placeholder="Type a message" id="message-input">
-                <button id="send-btn">Send</button>
+                <button id="send-btn" style="margin-left:5%;margin-right:5%">Send</button>
             </div>
             <div id="attachment-popup" class="popup hidden">
                 <div class="popup-option" id="photos-videos">Photos & Videos</div>
