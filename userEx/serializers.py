@@ -44,6 +44,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         logger.debug(f"Creating user with data: {validated_data}")
         first_name = self.context.get('first_name', '')
         last_name = self.context.get('last_name', '')
+        full_name = first_name + " "+ last_name
         email = validated_data['email']
         username_base = email.split('@')[0]
         random_suffix = str(random.randint(1000, 9999))  # Random number
@@ -56,7 +57,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             email=validated_data.get('email', ''),
             phone_number=validated_data['phone_number'],
             first_name=first_name,
-            last_name=last_name
+            last_name=last_name,
+            full_name=full_name,
         )
         user.set_password(validated_data['password'])
         user.save()
