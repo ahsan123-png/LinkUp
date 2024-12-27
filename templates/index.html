@@ -14,7 +14,7 @@
         <div class="sidebar">
             <div class="profile">
                 <a href="{% url 'profile' %}">
-                    <img src="{{ profile_image }}" alt="User">
+                    <img src="{{ profile_image }}" alt="User ">
                 </a>
                 <div class="user-info">
                     <h3>{{ user.first_name }}</h3>
@@ -34,30 +34,28 @@
             <div class="chat-list">
                 {% for user in users %}
                     <div class="chat-item" data-user="{{ user.username}}">
-                        <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'media/profile_images/profile.jpg' %}{% endif %}" alt="User">
+                        <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'media/profile_images/profile.jpg' %}{% endif %}" alt="User ">
                         <div class="chat-info">
                             <h4>{{ user.first_name }}</h4>
-                            <p>{{ user.status }}</p> <!--in Future we store chats -->
+                            <p>{{ user.status }}</p>
                         </div>
                     </div>
                 {% endfor %}
             </div>
         </div>
         <div class="chat-window">
-            <!-- Chat header -->
             <div class="chat-header">
                 <h4 id="chat-header-user">Select a User</h4>
                 <div class="chat-actions">
-                    <button><i class="fas fa-phone-alt"></i></button>
-                    <button><i class="fas fa-video"></i></button>
-                    <button><i class="fas fa-search"></i></button>
+                    <button><i class="fa-solid fa-phone" style="color: #22a538; margin:15px"></i></button>
+                    <button><i class="fas fa-video" style="color: #22a538; margin-right:35px"></i></button>
                 </div>
             </div>
             <div class="chat-content" id="chat-content">
                 <!-- Initially no messages -->
             </div>
             <div class="chat-input-section">
-                <button id="attachment-btn">📎</button>
+                <button id="attachment-btn"> 📎</button>
                 <input type="text" placeholder="Type a message" id="message-input">
                 <button id="send-btn" style="margin-left:5%;margin-right:5%">Send</button>
             </div>
@@ -69,7 +67,22 @@
             <div id="overlay" class="overlay hidden"></div>
         </div>
     </div>
+    <!-- Search Modal -->
+    <div id="search-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-modal">&times;</span>
+            <h3 style="margin-bottom:20px">Search Users</h3>
+            <div class="search-container" style="margin-bottom:20px">
+                <input id="search-input" type="text" placeholder="Enter user name" />
+                <button id="submit-search-btn" class="search-btn">Search</button>
+            </div>
+            <div id="search-results" class="search-results">
+                <!-- Dynamically populate search results here -->
+            </div>
+        </div>
+    </div>
+    
     <div id="home-url" data-home-url="{% url 'home' %}"></div>
-    <script src="{% static 'js/app.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>    
 </body>
 </html>

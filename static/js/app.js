@@ -83,3 +83,43 @@ $(document).ready(function () {
         chatContent.scrollTop = chatContent.scrollHeight; 
     });
 });
+window.onload = function () {
+    const modal = document.getElementById("search-modal"); 
+    modal.style.display = "none"; 
+};
+const searchBtn = document.getElementById("search-btn");
+const searchModal = document.getElementById("search-modal");
+const closeModalBtn = document.getElementById("close-modal");
+const searchInput = document.getElementById("search-input");
+const searchResults = document.getElementById("search-results");
+
+searchBtn.addEventListener("click", function () {
+    searchModal.style.display = "flex"; // Show modal
+});
+closeModalBtn.addEventListener("click", function () {
+    searchModal.style.display = "none"; // Hide modal
+});
+window.addEventListener("click", function (event) {
+    if (event.target === searchModal) {
+        searchModal.style.display = "none";
+    }
+});
+const users = ["John Doe", "Jane Smith", "Emily Johnson", "Michael Brown", "Sarah Wilson"];
+searchInput.addEventListener("input", function () {
+    const query = searchInput.value.toLowerCase();
+    searchResults.innerHTML = ""; // Clear previous results
+    users.forEach((user) => {
+        if (user.toLowerCase().includes(query)) {
+            const resultItem = document.createElement("p");
+            resultItem.textContent = user;
+            resultItem.addEventListener("click", function () {
+                alert(`You selected: ${user}`); // Action for selecting a user
+                searchModal.style.display = "none"; // Close modal after selecting a user
+            });
+            searchResults.appendChild(resultItem);
+        }
+    });
+    if (!searchResults.innerHTML) {
+        searchResults.innerHTML = "<p>No results found</p>"; // Display message when no results found
+    }
+});
