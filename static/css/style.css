@@ -461,11 +461,11 @@ body {
 }
 
 .modal-content {
-    background: white;
+    background: #333;
     padding: 20px;
     position: relative;
     border-radius: 8px;
-    width: 40%;
+    width: 30%;
     min-height: 250px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -490,32 +490,32 @@ body {
 #search-input {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #333;
     border-radius: 5px;
     font-size: 16px;
     outline: none;
     transition: border 0.3s;
 }
 #search-input:focus {
-    border: 1px solid #007bff;
+    border: 1px solid #4caf50;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 .search-results {
     margin-top: 10px;
     max-height: 150px;
     overflow-y: auto;
-    border: 1px solid #ccc;
+    border: 1px solid #4caf50;
     padding: 10px;
     border-radius: 5px;
-    background: #f9f9f9;
+    background: #333;
 }
 .search-results p {
     margin: 5px 0;
     padding: 5px;
     cursor: pointer;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #4caf50;
 }
 
 .search-results p:hover {
-    background: #eaeaea;
+    background: #333;
 }
