@@ -1,6 +1,9 @@
 // WebSocket instance
 let currentSocket = null;
-
+let callSocket = null;
+// DOM Elements for call buttons
+const phoneBtn = document.querySelector('.fa-phone');  // Phone button
+const videoBtn = document.querySelector('.fa-video');
 // DOM Elements
 const attachmentBtn = document.getElementById('attachment-btn');
 const attachmentPopup = document.getElementById('attachment-popup');
@@ -82,6 +85,36 @@ $(document).ready(function () {
         inputField.val(''); 
         chatContent.scrollTop = chatContent.scrollHeight; 
     });
+});
+function initCallSocket(receiverUsername, callType) {
+    if (callSocket) {
+        callSocket.close();
+    }
+    const socketUrl = `ws://127.0.0.1:8000/ws/call/${receiverUsername}/${callType}/`;
+    callSocket = new WebSocket(socketUrl);
+    callSocket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        console.log("Call signaling data:", data);
+        // Here, you can process the signaling data, e.g., offer/answer for WebRTC
+        // You can process things like ICE candidates, call state, etc.
+    };
+    callSocket.onerror = function (error) {
+        console.error("Call WebSocket Error:", error);
+    };
+    callSocket.onclose = function () {
+        console.warn("Call WebSocket closed for user:", receiverUsername);
+    };
+}
+// Add event listeners to the phone and video buttons
+phoneBtn.addEventListener('click', function () {
+    const selectedUser = document.getElementById('chat-header-user').textContent;  // Get selected user
+    initCallSocket(selectedUser, 'voice');  // Initiate voice call
+    // Show calling interface (e.g., call modal, spinner, etc.)
+});
+videoBtn.addEventListener('click', function () {
+    const selectedUser = document.getElementById('chat-header-user').textContent;  // Get selected user
+    initCallSocket(selectedUser, 'video');  // Initiate video call
+    // Show video calling interface (e.g., webcam view, etc.)
 });
 window.onload = function () {
     const modal = document.getElementById("search-modal"); 
