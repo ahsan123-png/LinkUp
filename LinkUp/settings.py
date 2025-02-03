@@ -94,7 +94,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [("172.19.211.225", 6379)],
+            "hosts": [("172.20.194.232", 6379)], #use WSL ip with command ip addr show eth0
         },
     },
 }
