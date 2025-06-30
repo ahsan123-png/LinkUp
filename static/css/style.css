@@ -77,6 +77,7 @@ body {
     flex-direction: column;
     background-color: #111;
     position: relative;
+    flex-grow: 1; /* Allow chat-window to expand */
 }
 
 .chat-header {
@@ -96,12 +97,15 @@ body {
 }
 
 .chat-content {
-    display: flex;
-    flex-direction: column;
+    flex-grow: 1; /* Allow chat-content to expand and fill available space */
+    /* display: flex;
+    flex-direction: column; */
     padding: 10px;
     overflow-y: auto;
     background: url('../images/whatsapp-bg.png') no-repeat center center;
     background-size: cover;
+    display: flex;
+    flex-direction: column; /* Stack messages vertically */
 }
 
 .message {
@@ -143,6 +147,9 @@ body {
     padding: 10px;
     background-color: #333;
     align-items: center;
+    position: sticky; /* Ensure it sticks to the bottom */
+    bottom: 0; /* Stick to the bottom of the chat-window */
+    z-index: 1; /* Ensure it stays above other elements */
 }
 
 .chat-input-section input {
@@ -220,7 +227,8 @@ body {
 
     .chat-window {
         width: 100%;
-        height: calc(100vh - 120px);
+        flex-grow: 1; /* Ensure chat-window expands */
+        /* height: calc(100vh - 120px); */
         /* Adjust height accordingly */
     }
 
@@ -263,7 +271,8 @@ body {
 
     .chat-window {
         width: 100%;
-        height: calc(100vh - 80px);
+        flex-grow: 1; /* Ensure chat-window expands */
+        /* height: calc(100vh - 80px); */
         /* Adjust height accordingly */
     }
 
@@ -330,7 +339,8 @@ body {
 
     .chat-window {
         width: 100%;
-        height: calc(100vh - 70px);
+        flex-grow: 1;
+        /* height: calc(100vh - 70px); */
         /* Adjust height accordingly */
     }
 
