@@ -19,12 +19,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True)
     email = serializers.EmailField(required=False, allow_blank=True)
-    phone_number = serializers.CharField(required=True)  # No additional validation
+    # phone_number = serializers.CharField(required=False)  # No additional validation
     username = serializers.CharField(required=False)
 
     class Meta:
         model = UserEx
-        fields = ['username', 'email', 'phone_number', 'password', 'full_name']
+        fields = ['username', 'email', 'password', 'full_name']
 
     def validate_full_name(self, value):
         logger.debug(f"Validating full_name: {value}")
@@ -55,7 +55,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user = UserEx.objects.create(
             username=unique_username,
             email=validated_data.get('email', ''),
-            phone_number=validated_data['phone_number'],
+            # phone_number=validated_data['phone_number'],
             first_name=first_name,
             last_name=last_name,
             full_name=full_name,

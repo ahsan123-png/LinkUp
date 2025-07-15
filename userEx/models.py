@@ -5,7 +5,7 @@ from django.utils import timezone
 # Create your models here.
 
 class UserEx(User):
-    phone_number = models.CharField(max_length=15, unique=True)
+    phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True)
     full_name = models.CharField(max_length=15, blank=True,null=True)
     profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True, default='profile_images/profile.png')
     is_verified = models.BooleanField(default=False)
