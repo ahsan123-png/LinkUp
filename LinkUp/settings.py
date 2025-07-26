@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'chats',
     'channels',
+    'drf_yasg',
     
 ]
 MIDDLEWARE = [
