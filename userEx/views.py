@@ -13,10 +13,36 @@ from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
-#+++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++``
 logger = logging.getLogger(__name__)
 # ================== =====================
+from drf_spectacular.utils import extend_schema, OpenApiExample
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import UserRegistrationSerializer
+
 class UserRegistrationAPIView(APIView):
+
+    @extend_schema(
+        request=UserRegistrationSerializer,  # This is what shows payload fields
+        responses={201: UserRegistrationSerializer},
+        description="Register a new user. A default profile image will be used if none is provided.",
+        examples=[
+            OpenApiExample(
+                name="User Registration Example",
+                value={
+                    "full_name": "John Doe",
+                    "email": "john@example.com",
+                    "password": "securepassword123"
+                    # You can optionally include "profile_image": "base64 or file" if needed
+                },
+                request_only=True
+            )
+        ],
+        tags=["User Registration"]
+    )
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
@@ -31,6 +57,7 @@ class UserRegistrationAPIView(APIView):
                 }
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 # ========== user Login ==============
 class UserLoginAPIView(APIView):
     def post(self, request):
