@@ -93,6 +93,7 @@ class UserLoginAPIView(APIView):
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 # ============== get user by id =================
 class UserExView(generics.GenericAPIView):
+    # permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
     queryset = UserEx.objects.all()  # Queryset for the UserEx model
     serializer_class = UserExSerializer
     def get(self, request, user_id=None):
@@ -102,7 +103,13 @@ class UserExView(generics.GenericAPIView):
             serializer = self.serializer_class(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            users = self.queryset.select_related().only('id', 'username', 'email', 'phone_number', 'is_verified')
+            current_user = request.user
+            if not current_user.is_authenticated:
+                return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
+            # Get all users except the current user
+            users = self.queryset.exclude(id=current_user.id).select_related().only(
+            'id', 'username', 'email', 'phone_number', 'is_verified'
+        )
             serializer = self.serializer_class(users, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
