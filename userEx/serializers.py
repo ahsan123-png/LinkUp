@@ -13,7 +13,10 @@ logger = logging.getLogger(__name__)
 class UserExSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserEx
-        fields = "__all__"
+        fields = [
+            'id', 'username', 'first_name', 'last_name', 'email',
+            'full_name', 'profile_image', 'is_verified', 'status', 'date_joined'
+        ]
         read_only_fields = ['id', 'username']
 class UserRegistrationSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(required=True)

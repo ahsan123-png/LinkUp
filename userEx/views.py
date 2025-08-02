@@ -180,3 +180,19 @@ def chat_history(request, receiver_username):
         for msg in messages
     ]
     return JsonResponse(message_list, safe=False)
+
+#========== Search Users ==============
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])  # remove this if open to all
+def search_users(request):
+    query = request.GET.get('q', '')
+
+    if '@' in query:
+        # Exact email match (case-insensitive)
+        users = UserEx.objects.filter(email__iexact=query)
+    else:
+        # Partial match by full name
+        users = UserEx.objects.filter(full_name__icontains=query)
+
+    serializer = UserExSerializer(users, many=True)
+    return Response(serializer.data)
