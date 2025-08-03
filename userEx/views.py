@@ -69,12 +69,11 @@ class UserLoginAPIView(APIView):
         try:
             if '@' in username_or_email_or_phone:
                 user = UserEx.objects.get(email=username_or_email_or_phone)
-                profile_image= user.profile_image.url if user.profile_image else None
-                full_name = user.full_name
             else:
                 user = UserEx.objects.get(phone_number=username_or_email_or_phone)
             user = authenticate(request, username=user.username, password=password)
             if user is not None:
+                user_ex = UserEx.objects.get(user_ptr_id=user.id)
                 login(request, user)
                 refresh = RefreshToken.for_user(user)
                 return Response({
@@ -83,8 +82,9 @@ class UserLoginAPIView(APIView):
                         "user_id": user.id,
                         "username": user.username,
                         "email": user.email,
-                        "full_name": full_name,
-                        "profile_image": profile_image if profile_image else None,
+                        "full_name": user_ex.full_name,
+                        "status": user_ex.status,
+                        "profile_image": user_ex.profile_image.url if user_ex.profile_image else None,
                     },
                     "tokens": {
                         "refresh": str(refresh),
