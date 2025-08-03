@@ -162,7 +162,8 @@ def send_private_message(request):
     )
     return Response({'message': 'Message sent successfully.', 'data': PrivateMessageSerializer(private_message).data})
 # =================== Chat History =================
-@login_required
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def chat_history(request, receiver_username):
     sender = request.user
     receiver = User.objects.get(username=receiver_username)
