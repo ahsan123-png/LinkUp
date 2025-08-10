@@ -71,3 +71,11 @@ class PrivateMessageSerializer(serializers.ModelSerializer):
         fields = ['id', 'sender', 'receiver', 'content', 'media', 'sent_at']
 
 
+class FriendRequestSerializer(serializers.ModelSerializer):
+    from_user_name = serializers.CharField(source='from_user.full_name', read_only=True)
+    to_user_name = serializers.CharField(source='to_user.full_name', read_only=True)
+    profile_image = serializers.ImageField(source='from_user.profile_image', read_only=True)
+
+    class Meta:
+        model = FriendRequest
+        fields = ['id', 'from_user', 'to_user', 'from_user_name', 'to_user_name', 'profile_image', 'request_status', 'created_at']

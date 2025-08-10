@@ -13,6 +13,9 @@ from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import viewsets, permissions, status
+from .models import FriendRequest
+from .serializers import FriendRequestSerializer
 #+++++++++++++++++++++++++++++++++++++++++++++++``
 logger = logging.getLogger(__name__)
 # ================== =====================
@@ -163,7 +166,7 @@ def send_private_message(request):
     return Response({'message': 'Message sent successfully.', 'data': PrivateMessageSerializer(private_message).data})
 # =================== Chat History =================
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def chat_history(request, receiver_username):
     sender = request.user
     receiver = User.objects.get(username=receiver_username)
@@ -198,3 +201,52 @@ def search_users(request):
 
     serializer = UserExSerializer(users, many=True)
     return Response(serializer.data)
+
+#================== Friend Requests =================
+class FriendRequestViewSet(viewsets.ModelViewSet):
+    serializer_class = FriendRequestSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        """
+        Show only requests where the logged-in user is involved.
+        """
+        return FriendRequest.objects.filter(to_user=self.request.user)
+
+    def create(self, request):
+        from_user = get_object_or_404(UserEx, pk=request.user.pk)
+        to_user_id = request.data.get('to_user')
+
+        if not to_user_id:
+            return Response({"error": "to_user is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if int(to_user_id) == from_user.id:
+            return Response({"error": "You cannot send a request to yourself"}, status=status.HTTP_400_BAD_REQUEST)
+
+        to_user = get_object_or_404(UserEx, pk=to_user_id)
+
+        if FriendRequest.objects.filter(from_user=from_user, to_user=to_user).exists():
+            return Response({"error": "Request already sent"}, status=status.HTTP_400_BAD_REQUEST)
+
+        friend_request = FriendRequest.objects.create(from_user=from_user, to_user=to_user)
+        return Response(FriendRequestSerializer(friend_request).data, status=status.HTTP_201_CREATED)
+
+    def update(self, request, pk=None):
+        """
+        Accept or reject a friend request
+        """
+        try:
+            friend_request = FriendRequest.objects.get(id=pk, to_user=request.user)
+        except FriendRequest.DoesNotExist:
+            return Response({"error": "Request not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        action = request.data.get('action')
+        if action == "accept":
+            friend_request.status = "accepted"
+        elif action == "reject":
+            friend_request.status = "rejected"
+        else:
+            return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
+
+        friend_request.save()
+        return Response(FriendRequestSerializer(friend_request).data)
