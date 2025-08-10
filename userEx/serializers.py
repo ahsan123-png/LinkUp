@@ -15,7 +15,7 @@ class UserExSerializer(serializers.ModelSerializer):
         model = UserEx
         fields = [
             'id', 'username', 'first_name', 'last_name', 'email',
-            'full_name', 'profile_image', 'is_verified', 'status', 'date_joined'
+            'full_name', 'profile_image', 'is_verified', 'status', 'date_joined','is_friend'
         ]
         read_only_fields = ['id', 'username']
 class UserRegistrationSerializer(serializers.ModelSerializer):

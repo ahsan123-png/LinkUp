@@ -10,6 +10,7 @@ class UserEx(User):
     profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True, default='profile_images/profile.png')
     is_verified = models.BooleanField(default=False)
     status=models.CharField(max_length=150,null=True,blank=True , default='None')
+    is_friend=models.CharField(max_length=150,null=True,blank=True , default=False)
 
 class Group(models.Model):
     name = models.CharField(max_length=255)
