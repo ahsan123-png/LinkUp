@@ -76,6 +76,24 @@ class FriendRequestSerializer(serializers.ModelSerializer):
     to_user_name = serializers.CharField(source='to_user.full_name', read_only=True)
     profile_image = serializers.ImageField(source='from_user.profile_image', read_only=True)
 
+    # <-- declare the field
+    total_received = serializers.SerializerMethodField()
+
     class Meta:
         model = FriendRequest
-        fields = ['id', 'from_user', 'to_user', 'from_user_name', 'to_user_name', 'profile_image', 'request_status', 'created_at']
+        fields = [
+            'id', 'from_user', 'to_user',
+            'from_user_name', 'to_user_name', 'profile_image',
+            'request_status', 'created_at', 'total_received'
+        ]
+
+    def get_total_received(self, obj):
+        # Safely get request from context
+        request = self.context.get('request', None)
+        if request and request.user and not request.user.is_anonymous:
+            # Count only pending (change/remove filter if you want "all" received)
+            return FriendRequest.objects.filter(
+                to_user=request.user,
+                request_status='pending'
+            ).count()
+        return 0
