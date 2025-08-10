@@ -212,22 +212,17 @@ class FriendRequestViewSet(viewsets.ModelViewSet):
         Show only requests where the logged-in user is involved.
         """
         return FriendRequest.objects.filter(to_user=self.request.user)
-
+    
     def create(self, request):
         from_user = get_object_or_404(UserEx, pk=request.user.pk)
         to_user_id = request.data.get('to_user')
-
         if not to_user_id:
             return Response({"error": "to_user is required"}, status=status.HTTP_400_BAD_REQUEST)
-
         if int(to_user_id) == from_user.id:
             return Response({"error": "You cannot send a request to yourself"}, status=status.HTTP_400_BAD_REQUEST)
-
         to_user = get_object_or_404(UserEx, pk=to_user_id)
-
         if FriendRequest.objects.filter(from_user=from_user, to_user=to_user).exists():
             return Response({"error": "Request already sent"}, status=status.HTTP_400_BAD_REQUEST)
-
         friend_request = FriendRequest.objects.create(from_user=from_user, to_user=to_user)
         return Response(FriendRequestSerializer(friend_request).data, status=status.HTTP_201_CREATED)
 
@@ -242,9 +237,9 @@ class FriendRequestViewSet(viewsets.ModelViewSet):
 
         action = request.data.get('action')
         if action == "accept":
-            friend_request.status = "accepted"
+            friend_request.request_status = "accepted"
         elif action == "reject":
-            friend_request.status = "rejected"
+            friend_request.request_status = "rejected"
         else:
             return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
 
