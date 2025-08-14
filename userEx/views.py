@@ -16,6 +16,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import viewsets, permissions, status
 from .models import FriendRequest
 from .serializers import FriendRequestSerializer
+from rest_framework.decorators import action
 #+++++++++++++++++++++++++++++++++++++++++++++++``
 logger = logging.getLogger(__name__)
 # ================== =====================
@@ -103,6 +104,11 @@ class UserExView(generics.GenericAPIView):
     # permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
     queryset = UserEx.objects.all()  # Queryset for the UserEx model
     serializer_class = UserExSerializer
+    def get_serializer_context(self):
+        # This ensures the request context is passed to the serializer
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     def get(self, request, user_id=None):
         if user_id:
             # Get user by ID
@@ -117,7 +123,7 @@ class UserExView(generics.GenericAPIView):
             users = self.queryset.exclude(id=current_user.id).select_related().only(
             'id', 'username', 'email', 'phone_number', 'is_verified'
         )
-            serializer = self.serializer_class(users, many=True)
+            serializer = self.serializer_class(users, many=True, context=self.get_serializer_context())
             return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, user_id):
@@ -245,3 +251,21 @@ class FriendRequestViewSet(viewsets.ModelViewSet):
 
         friend_request.save()
         return Response(FriendRequestSerializer(friend_request).data)
+    @action(detail=True, methods=['post'])
+    def cancel(self, request, pk=None):
+        try:
+            friend_request = FriendRequest.objects.get(
+                id=pk,  
+                from_user=request.user,
+                request_status='pending'
+            )
+            friend_request.delete()
+            return Response(
+                {"message": "Friend request cancelled."},
+                status=status.HTTP_200_OK
+            )
+        except FriendRequest.DoesNotExist:
+            return Response(
+                {"error": "Cannot cancel this request."},
+                status=status.HTTP_404_NOT_FOUND
+            )

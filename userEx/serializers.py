@@ -11,13 +11,63 @@ import pprint
 logger = logging.getLogger(__name__)
 # =========== Serializer ================
 class UserExSerializer(serializers.ModelSerializer):
+    is_friend = serializers.SerializerMethodField()
+    profile_image = serializers.SerializerMethodField()
     class Meta:
         model = UserEx
         fields = [
             'id', 'username', 'first_name', 'last_name', 'email',
-            'full_name', 'profile_image', 'is_verified', 'status', 'date_joined','is_friend'
+            'full_name', 'profile_image', 'is_verified', 'status', 'date_joined', 'is_friend'
         ]
         read_only_fields = ['id', 'username']
+    def get_profile_image(self, obj):
+        if obj.profile_image:
+            return obj.profile_image.url  # this returns /media/... without domain
+        return None
+    def get_is_friend(self, obj):
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated or request.user == obj:
+            return "False"
+
+        # Debug print
+        print(f"Checking relationship between {request.user.username} and {obj.username}")
+
+        # Check for accepted friendship
+        is_accepted = FriendRequest.objects.filter(
+            request_status="accepted"
+        ).filter(
+            models.Q(from_user=request.user, to_user=obj) |
+            models.Q(from_user=obj, to_user=request.user)
+        ).exists()
+
+        if is_accepted:
+            print(f"Users are friends")
+            return "True"
+
+        # Check for pending outgoing request (current user sent request)
+        is_pending_outgoing = FriendRequest.objects.filter(
+            from_user=request.user,
+            to_user=obj,
+            request_status="pending"
+        ).exists()
+
+        if is_pending_outgoing:
+            print(f"Pending outgoing request")
+            return "Pending"
+
+        # Check for pending incoming request (current user received request)
+        is_pending_incoming = FriendRequest.objects.filter(
+            from_user=obj,
+            to_user=request.user,
+            request_status="pending"
+        ).exists()
+
+        if is_pending_incoming:
+            print(f"Pending incoming request")
+            return "Received"
+
+        print(f"No relationship")
+        return "False"
 class UserRegistrationSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True)
